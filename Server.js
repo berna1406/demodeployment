@@ -10,6 +10,16 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+if (process.env.NODE_ENV === 'production') {
+  const buildPath = path.join(__dirname, 'client', 'build');
+  
+  app.use(express.static(buildPath));
+  
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+  });
+}
+
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/messages_db';
 
